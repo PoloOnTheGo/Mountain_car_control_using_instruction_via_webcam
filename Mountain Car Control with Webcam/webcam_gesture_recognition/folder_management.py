@@ -1,9 +1,9 @@
 import os
 
-sub_dir = ['push_left(0)', 'no_push(1)', 'push_right(2)']  # The list of sub-directories
-root_dir = 'data'
+sub_dir = ['0', '1', '2']  # The list of sub-directories
+root_dir = 'dataset1'
 main_dir = ['train', 'test', 'validation']  # Name of the sub-directories
-act_no_fld_name_map = {'0': 'push_left(0)', '1': 'no_push(1)', '2': 'push_right(2)'}
+# act_no_fld_name_map = {'0': '0', '1': '1', '2': '2'}
 working_directory: str = ''
 
 
@@ -25,8 +25,8 @@ def set_directory(mode):
 
 
 def get_image_count(act_no):
-    return str(len(os.listdir(working_directory + act_no_fld_name_map[act_no])))
+    return str(len(os.listdir(working_directory + act_no)))
 
 
 def get_image_name(act_no):
-    return working_directory + act_no_fld_name_map[act_no] + '/' + get_image_count(act_no) + '.jpg'
+    return working_directory + act_no + '/' + get_image_count(act_no) + '.jpg'
