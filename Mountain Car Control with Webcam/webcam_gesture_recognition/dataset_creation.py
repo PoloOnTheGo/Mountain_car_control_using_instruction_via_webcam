@@ -1,7 +1,7 @@
 # Importing the libraries
 import cv2
-from webcam_gesture_recognition import folder_management as fm
-from webcam_gesture_recognition import image_processing_util as ipu
+import folder_management as fm
+import image_processing_util as ipu
 
 
 def save_processed_img(processed, interrupt):
@@ -16,7 +16,7 @@ def save_processed_img(processed, interrupt):
 def capture_process_video(mode):
     cap = cv2.VideoCapture(0)
     while cap.isOpened():
-        _, processed = ipu.process_video(cap, 'data_collect', mode)
+        processed = ipu.process_video(cap, 'data_collect', mode)
         interrupt = cv2.waitKey(10)
         if interrupt & 0xFF == 27:  # esc key
             break
