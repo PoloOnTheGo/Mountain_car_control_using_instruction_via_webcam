@@ -1,35 +1,18 @@
 import time
 import matplotlib.pyplot as plt
+import numpy as np
 from deep_nueral_model.conv_model_metrics import ConvModelMetrics
 from deep_nueral_model.dense_layer_metrics import DenseLayerMetrics
-from keras.preprocessing.image import ImageDataGenerator
 from deep_nueral_model.model_metrics import ModelMetrics
 from deep_nueral_model import model as md
 
 
-def preprocess_data(dataset_name, batch_size):
-
-    # Preprocessing the Training set
-    train_datagen = ImageDataGenerator(rescale=1. / 255, shear_range=0.2, zoom_range=0.2, horizontal_flip=True)
-    training_set = train_datagen.flow_from_directory(str(dataset_name + '/train'), target_size=(64, 64), batch_size=batch_size,
-                                                     class_mode='categorical')
-
-    # Preprocessing the Test set
-    test_datagen = ImageDataGenerator(rescale=1. / 255)
-    test_set = test_datagen.flow_from_directory(str(dataset + '/test'), target_size=(64, 64), batch_size=batch_size,
-                                                class_mode='categorical')
-
-    # return training_set, test_set
-
-    return training_set, test_set
-
-
 def model_evaluation(dataset_name: str, model_no, model_metrics_obj):
-    train, test = preprocess_data(dataset_name, model_metrics_obj.batch_size)
+    train, test, val = md.preprocess_data_for_model(dataset_name, model_metrics_obj.batch_size)
     print(model_metrics_obj.str_format())
     cnn = md.model_creation(model_metrics_obj, (64, 64, 3))
     start_time = time.time()
-    history = md.train_model(cnn, model_metrics_obj, train, test)
+    history, trained_cnn = md.train_model(cnn, model_metrics_obj, train, test)
     elapsed_time = time.time() - start_time
 
     fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(16, 4))
@@ -42,6 +25,16 @@ def model_evaluation(dataset_name: str, model_no, model_metrics_obj):
     axes[1].legend(['loss', 'val_loss'])
     fig.suptitle('Model {}, Time takes {} s'.format(model_no, elapsed_time))
     plt.show()
+
+    label_list = val[0][1]
+    output = trained_cnn.predict(val)
+    i = 0
+    for x in range(75):
+        predicted_cat = list(output[x]).index(max(output[x]))
+        label = label_list[x].argmax()
+        if predicted_cat != label:
+            i += 1
+    print('# Wrong prediction :' + str(i))
 
 
 def different_models(dataset):
@@ -99,12 +92,12 @@ def different_models(dataset):
 
 
 # -------------------------------------------------- Dataset1 ---------------------------------------------
-dataset = 'dataset1'
+dataset = '../webcam_gesture_recognition/dataset1'
 different_models(dataset)
 
 # -----------------------------------------------End of Dataset1-------------------------------------------
 
 # -------------------------------------------------- Dataset2 ---------------------------------------------
-dataset = 'dataset2'
+dataset = '../webcam_gesture_recognition/dataset2'
 different_models(dataset)
 # -----------------------------------------------End of Dataset2-------------------------------------------

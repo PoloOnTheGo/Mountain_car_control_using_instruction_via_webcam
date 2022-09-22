@@ -2,7 +2,7 @@ import os
 
 sub_dir = ['0', '1', '2']  # The list of sub-directories
 root_dir = 'dataset2'
-main_dir = ['train', 'test', 'validation']  # Name of the sub-directories
+main_dir = ['train', 'test', 'validation']  # Name of the main-directories
 # act_no_fld_name_map = {'0': '0', '1': '1', '2': '2'}
 working_directory: str = ''
 
